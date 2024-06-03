@@ -2,6 +2,13 @@ import mongoose, { Document } from "mongoose"
 
 const service = (Model: mongoose.Model<any>) => {
     const getAll = async () => {
+        if(Model.modelName == "benefit"){
+            const query = [
+                {path: "businessId", select: " -_id"},
+                {path: "creditCardId", select: " -_id"}
+            ]
+            return await Model.find({}).populate(query).exec();
+        } 
         return await Model.find({})
     }
 

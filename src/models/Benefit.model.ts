@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
-enum ValueType {
+enum DiscountType {
     POINTS = "points",
     CASHBACK = "cashback", //User cannot choose cashback as an option, Its an added bonus to
     //the respective credit card.
     DISCOUNT = "discount",
 }
 
-enum DiscountType {
+enum ValueType {
     PERCENTAGE = "percentage",
     NUMBER = "number",
 }
@@ -15,8 +15,8 @@ enum DiscountType {
 export interface IBenefit {
     businessId?: mongoose.Schema.Types.ObjectId;
     creditCardId: mongoose.Schema.Types.ObjectId;
-    valueType: ValueType.POINTS | ValueType.CASHBACK | ValueType.DISCOUNT;
-    discountType: DiscountType.PERCENTAGE | DiscountType.NUMBER ;
+    discountType: DiscountType.POINTS | DiscountType.CASHBACK | DiscountType.DISCOUNT;
+    valueType: ValueType.PERCENTAGE | ValueType.NUMBER ;
     value: number;
 }
 
@@ -32,7 +32,19 @@ const BenefitSchema = new mongoose.Schema<IBenefit>({
         ref: "creditCard"
     },
 
-
+    discountType: {
+        type: String,
+        required: true
+    },
+    valueType: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: Number,
+        min: 1
+    }
+    
 })
 
 const Benefit = mongoose.model<IBenefit>("benefit", BenefitSchema, "benefits")

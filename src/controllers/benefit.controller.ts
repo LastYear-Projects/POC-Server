@@ -4,7 +4,7 @@ import { IBenefit } from "../models/Benefit.model";
 
 const getAllBenefits = async (req: Request, res: Response) => {
     try{
-        const benefits = await benefitService.getAll();
+        const benefits = await benefitService.getAll()
         return res.json(benefits)
     }
     catch(error){
@@ -16,7 +16,7 @@ const addBenefit = async  (req: Request, res: Response) => {
     try{
         const benefit:IBenefit = req.body
         if(!benefit.creditCardId || !benefit.discountType || !benefit.value || !benefit.valueType){
-            return res.json({"error in addBenefit": "please provide required values" })
+            return res.status(400).json({"error in addBenefit": "please provide required values" })
         }
         await benefitService.add(benefit)
         return res.status(201).json({})
