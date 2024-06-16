@@ -5,6 +5,4 @@ const benefitService = genericService(Benefit)
 
 
 
-
-
 export default benefitService

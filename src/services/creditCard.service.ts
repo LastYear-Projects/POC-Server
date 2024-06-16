@@ -6,5 +6,4 @@ const creditCardService = genericService(CreditCard)
 
 
 
-
 export default creditCardService

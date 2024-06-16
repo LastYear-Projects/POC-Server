@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 enum DiscountType {
     POINTS = "points",
     CASHBACK = "cashback", //User cannot choose cashback as an option, Its an added bonus to
@@ -15,8 +14,8 @@ enum ValueType {
 export interface IBenefit {
     businessId?: mongoose.Schema.Types.ObjectId;
     creditCardId: mongoose.Schema.Types.ObjectId;
-    discountType: DiscountType.POINTS | DiscountType.CASHBACK | DiscountType.DISCOUNT;
-    valueType: ValueType.PERCENTAGE | ValueType.NUMBER ;
+    discountType: DiscountType;
+    valueType:ValueType ;
     value: number;
 }
 
@@ -34,10 +33,12 @@ const BenefitSchema = new mongoose.Schema<IBenefit>({
 
     discountType: {
         type: String,
+        enum: Object.values(DiscountType),
         required: true
     },
     valueType: {
         type: String,
+        enum: Object.values(ValueType),
         required: true
     },
     value: {
