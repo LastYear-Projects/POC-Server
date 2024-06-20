@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose"
+import mongoose, { Document,Types } from "mongoose"
 
 const service = (Model: mongoose.Model<any>) => {
 
@@ -13,25 +13,50 @@ const service = (Model: mongoose.Model<any>) => {
         return await Model.find({})
     }
 
+    const getById = async (id:Types.ObjectId) => {
+        try {
+            return await Model.findById(id)
 
-    const add = async (item) => {
+        } catch (error) {
+            throw new Error(error.message)
+        }
+
+    }
+
+    const getByParameters = async (parameter:object) => {
+        try {
+            return await Model.find(parameter)
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    }
+
+    const add = async (item:object) => {
         const newModel:Document = new Model(item);
         return await newModel.save()
     }
 
-    const deleteAll = async()=> {
+    const deleteAll = async () => {
         return await Model.deleteMany({})
     }
-
-
+    
+    const deleteById = async (id:Types.ObjectId) => {
+        try {
+            return await Model.findByIdAndDelete(id)
+        } catch(error) {
+            throw new Error(error.message)
+        }
+    }
 
     return {
         getAll,
+        getById,
+        getByParameters,
         add,
-        deleteAll
+        deleteAll,
+        deleteById,
     }
 
-    
 }
 
 export default service;
