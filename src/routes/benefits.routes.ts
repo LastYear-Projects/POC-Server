@@ -1,6 +1,7 @@
 import { Router } from "express";
 import benefitController from "../controllers/benefit.controller";
-
+import { validateRequest } from "../middlewares";
+import benefitSchema from "../Schemas/benefitSchema";
 
 const benefitRouter:Router = Router();
 
@@ -9,7 +10,7 @@ benefitRouter
 .get("/", benefitController.getAllBenefits)
 .get("/find", benefitController.getBenfitByParamaters)
 .get("/:id", benefitController.getBenefitById)
-.post("/", benefitController.addBenefit)
+.post("/",validateRequest(benefitSchema), benefitController.addBenefit)
 .delete("/", benefitController.deleteAllBenefits)
 .delete("/:id", benefitController.deleteBenefitById)
 

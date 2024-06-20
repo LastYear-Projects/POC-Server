@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-enum DiscountType {
+export enum DiscountType {
     POINTS = "points",
     CASHBACK = "cashback", //User cannot choose cashback as an option, Its an added bonus to
     //the respective credit card.
     DISCOUNT = "discount",
 }
 
-enum ValueType {
+export enum ValueType {
     PERCENTAGE = "percentage",
     NUMBER = "number",
 }
