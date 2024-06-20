@@ -23,9 +23,9 @@ const service = (Model: mongoose.Model<any>) => {
 
     }
 
-    const getByParameters = async (parameter:object) => {
+    const getByParameters = async (parameters:object) => {
         try {
-            return await Model.find(parameter)
+            return await Model.find(parameters)
         } catch (error) {
             throw new Error(error.message)
         }
