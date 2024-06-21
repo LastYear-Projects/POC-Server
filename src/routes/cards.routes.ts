@@ -7,7 +7,6 @@ const creditCardRouter:Router = Router();
 
 creditCardRouter
 .get("/", creditCardController.getAllCreditCards)
-.get("/find",creditCardController.getCreditCardByParameters)
 .get("/:id", creditCardController.getCreditCardById)
 .post("/",validateRequest(creditCardSchema),creditCardController.addCreditCard)
 .delete("/", creditCardController.deleteAllCreditCards)

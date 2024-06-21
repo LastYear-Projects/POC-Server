@@ -8,7 +8,6 @@ const benefitRouter:Router = Router();
 
 benefitRouter
 .get("/", benefitController.getAllBenefits)
-.get("/find", benefitController.getBenfitByParamaters)
 .get("/:id", benefitController.getBenefitById)
 .post("/",validateRequest(benefitSchema), benefitController.addBenefit)
 .delete("/", benefitController.deleteAllBenefits)

@@ -2,15 +2,15 @@ import mongoose, { Document,Types } from "mongoose"
 
 const service = (Model: mongoose.Model<any>) => {
 
-    const getAll = async () => {
+    const getAll = async (queryParams:Object) => {
         if(Model.modelName == "benefit"){
             const query = [
                 {path: "businessId", select: " -_id"}, //TODO: check if we need to change it to path: business
                 {path: "creditCardId", select: " -_id"} //TODO: check if we need to change it to path: creditCard
             ]
-            return await Model.find({}).populate(query).exec();
+            return await Model.find(queryParams).populate(query).exec();
         } 
-        return await Model.find({})
+        return await Model.find(queryParams)
     }
 
     const getById = async (id:Types.ObjectId) => {
@@ -21,14 +21,6 @@ const service = (Model: mongoose.Model<any>) => {
             throw new Error(error.message)
         }
 
-    }
-
-    const getByParameters = async (parameters:object) => {
-        try {
-            return await Model.find(parameters)
-        } catch (error) {
-            throw new Error(error.message)
-        }
     }
 
     const add = async (item:object) => {
@@ -51,7 +43,6 @@ const service = (Model: mongoose.Model<any>) => {
     return {
         getAll,
         getById,
-        getByParameters,
         add,
         deleteAll,
         deleteById,
