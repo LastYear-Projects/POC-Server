@@ -1,7 +1,7 @@
 import { Router } from "express";
 import businessController from "../controllers/business.controller";
 import { validateRequest } from "../middlewares";
-import businessSchema from "../tmpdas/businessSchema";
+import businessSchema from "../schemas/businessSchema";
 
 const businessRouter:Router = Router();
 
