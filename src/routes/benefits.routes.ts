@@ -1,7 +1,7 @@
 import { Router } from "express";
 import benefitController from "../controllers/benefit.controller";
 import { validateRequest } from "../middlewares";
-import benefitSchema from "../Schemas/benefitSchema";
+import benefitSchema from "../schemas/benefitSchema";
 
 const benefitRouter:Router = Router();
 

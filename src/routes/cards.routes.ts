@@ -1,7 +1,7 @@
 import { Router } from "express";
 import creditCardController from "../controllers/creditCard.controller";
 import { validateRequest } from "../middlewares";
-import creditCardSchema from "../Schemas/creditCardSchema";
+import creditCardSchema from "../schemas/creditCardSchema";
 const creditCardRouter:Router = Router();
 
 

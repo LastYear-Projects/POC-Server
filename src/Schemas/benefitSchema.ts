@@ -1,5 +1,5 @@
 import { z } from "zod";
-import {discountType,valueType} from "./Types"
+import {discountType,valueType} from "./types"
 import objectIdSchema from "./objectIdSchema";
 
 const benefitSchema = z.object({
