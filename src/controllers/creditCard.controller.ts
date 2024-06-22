@@ -6,6 +6,7 @@ import { Types } from "mongoose";
 const getAllCreditCards = async (req: Request, res: Response) => {
   const query = req.query;
   try {
+    
     const creditCards = await creditCardService.getAll(query);
     return res.json(creditCards);
   } catch (error: any) {

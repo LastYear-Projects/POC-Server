@@ -1,4 +1,4 @@
-import userSchema from "../Schemas/userSchema";
+import userSchema from "../schemas/userSchema";
 
 const user = {
   firstName: "John",

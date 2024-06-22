@@ -17,6 +17,9 @@ export interface IBenefit {
     discountType: DiscountType;
     valueType:ValueType ;
     value: number;
+    pointsValue?: number; // describes the mapping between points --> shekels. for example - 0.01 means that 1 points worth 0.01 shekels. (exists only in points benefits)
+    maxProfit?: number; //for a percentage benefit - describe the maximum profit a user can achieve. (may exists only in percentage)
+    minPurchaseAmount?: number; // for a number benefit - describe the minimum purchase amount should be to activate the benefit. (exists only in number benefits)
 }
 
 const BenefitSchema = new mongoose.Schema<IBenefit>({
@@ -44,6 +47,15 @@ const BenefitSchema = new mongoose.Schema<IBenefit>({
     value: {
         type: Number,
         min: 1
+    },
+    pointsValue: {
+        type: Number
+    },
+    maxProfit: {
+        type: Number,
+    },
+    minPurchaseAmount: {
+        type: Number
     }
     
 })

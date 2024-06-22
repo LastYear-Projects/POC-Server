@@ -1,4 +1,4 @@
-import businessSchema from "../Schemas/businessSchema"
+import businessSchema from "../schemas/businessSchema"
 
 interface Business{
     businessName:any

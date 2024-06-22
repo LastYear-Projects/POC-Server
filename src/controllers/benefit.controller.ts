@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import benefitService from "../services/benefit.service";
-import { IBenefit } from "../models/Benefit.model";
+import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
 import { Types } from "mongoose";
 
 const getAllBenefits = async (req: Request, res: Response) => {

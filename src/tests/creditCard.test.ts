@@ -1,4 +1,4 @@
-import creditCardSchema from "../Schemas/creditCardSchema";
+import creditCardSchema from "../schemas/creditCardSchema";
 
 interface CreditCard{
     cardName:any

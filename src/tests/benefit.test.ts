@@ -1,5 +1,5 @@
 import { DiscountType, ValueType } from "../models/Benefit.model";
-import benefitSchema from "../Schemas/benefitSchema";
+import benefitSchema from "../schemas/benefitSchema";
 
 interface IBenefitTest{
     businessId?: string;
@@ -60,3 +60,6 @@ describe("benefitSchema", () => {
         testBenefit = { ...benefit };
     });
 }) 
+
+//TODO: test also the controller and the service
+

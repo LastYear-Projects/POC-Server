@@ -1,10 +1,10 @@
 import { Router } from "express";
 import recommendationController from "../controllers/recommendation.controller";
+import { validateRequest, validateUserToken } from "../middlewares";
 const recommendationRouter=Router();
 
 recommendationRouter
-.get("/",recommendationController.getRecommendations)
-
+.get("/", validateUserToken, recommendationController.getRecommendations)
 
 
 
