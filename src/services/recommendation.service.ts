@@ -1,13 +1,4 @@
-export enum ValueType {
-  PERCENTAGE = "percentage",
-  NUMBER = "number",
-}
-
-export enum DiscountType {
-  POINTS = "points",
-  CASHBACK = "cashback",
-  DISCOUNT = "discount",
-}
+import { DiscountType, ValueType } from "../models/Benefit.model";
 
 export type CreditCard = {
   id: number;
@@ -33,8 +24,9 @@ export type UserPreferences = {
 };
 
 export type GradedBenefit = {
-  benefit: Benefit;
+  creditCards: CreditCard;
   grade: number;
+  profit: number;
 };
 
 //TODO - need to take the pointsValue from the database. -> Remove after DB integration. line 74.
@@ -72,7 +64,9 @@ const grading = (
     ? creditCardCashbackBenefit.value
     : 0;
 
-  switch (userPreferences.discountType) {
+  switch (
+    userPreferences.discountType //userPreferences -> benefit.
+  ) {
     case DiscountType.DISCOUNT:
       if (benefit.valueType === ValueType.PERCENTAGE) {
         grade =
@@ -93,7 +87,7 @@ const grading = (
       grade = transactionPrice - benefit.value * pointsValue + cashbackBonus;
       break;
   }
-  return grade;
+  return transactionPrice - grade;
 };
 
 /**
@@ -103,21 +97,17 @@ const grading = (
  * @param {number} transactionAmount - The price of the transaction.
  * @returns {GradedBenefit[]} - The list of graded benefits sorted in descending order of their grade.
  */
-const getRecommendations = async (
+const getRecommendations = (
   benefits: Benefit[],
   userPreferences: UserPreferences,
   transactionAmount: number
-): Promise<GradedBenefit[]> => {
-  const gradedBenefits = benefits
-    .filter((benefit) =>
-      userPreferences.creditCardsIds.includes(benefit.creditCardId)
-    )
-    .map((benefit) => ({
-      benefit,
-      grade: grading(benefit, userPreferences, transactionAmount, benefits),
-    }));
+): GradedBenefit[] => {
+  const gradedBenefits = benefits.map((benefit) => ({
+    benefit,
+    grade: grading(benefit, userPreferences, transactionAmount, benefits),
+  }));
 
-  return gradedBenefits.sort((a, b) => a.grade - b.grade);
+  return gradedBenefits.sort((a, b) => b.grade - a.grade);
 };
 
 export default {
