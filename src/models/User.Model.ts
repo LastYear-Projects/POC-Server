@@ -1,9 +1,14 @@
 import mongoose, { Types } from "mongoose";
 
-export enum UserPreference {
+export enum ProfitType {
   POINTS = "points",
   LOWEST_PRICE = "lowestPrice",
   NOMINAL_PROFIT="nominalProfit"
+}
+
+export type UserPreferences {
+  profitType: ProfitType,
+  cardsPreference: Types.ObjectId[]
 }
 
 export interface IUser {
@@ -12,8 +17,23 @@ export interface IUser {
   email: String;
   password: String;
   creditCards: Types.ObjectId[];
-  userPrefrence: UserPreference;
+  userPreferences: UserPreferences
 }
+
+
+const UserPreferencesSchema = new mongoose.Schema<UserPreferences>({
+  profitType: {
+    type: String,
+    enum: ProfitType,
+    default: ProfitType.NOMINAL_PROFIT,
+  },
+  cardsPreference: {
+    type: [Types.ObjectId],
+    default: [],
+    ref: 'creditCard' // Assuming you have a CreditCard model
+  }
+
+}, { _id: false } )
 
 const UserSchema = new mongoose.Schema<IUser>({
   firstName: {
@@ -37,11 +57,14 @@ const UserSchema = new mongoose.Schema<IUser>({
     ref: "creditCard",
     default: [],
   },
-  userPrefrence: {
-    type:String,
-    enum:Object.values(UserPreference),
-    default:UserPreference.NOMINAL_PROFIT
-  },
+  userPreferences: {
+    type: UserPreferencesSchema,
+    required: true,
+    default: {
+      profitType: ProfitType.NOMINAL_PROFIT,
+      cardsPreference: []
+    }
+  }
 });
 
 const User = mongoose.model<IUser>("user", UserSchema, "users");
