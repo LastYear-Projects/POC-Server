@@ -12,10 +12,10 @@ export type UserPreferences {
 }
 
 export interface IUser {
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   creditCards: Types.ObjectId[];
   userPreferences: UserPreferences
 }
@@ -24,7 +24,7 @@ export interface IUser {
 const UserPreferencesSchema = new mongoose.Schema<UserPreferences>({
   profitType: {
     type: String,
-    enum: ProfitType,
+    enum: Object.values(ProfitType),
     default: ProfitType.NOMINAL_PROFIT,
   },
   cardsPreference: {
