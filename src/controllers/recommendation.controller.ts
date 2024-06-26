@@ -5,10 +5,15 @@ import benefitService from "../services/benefit.service";
 import { Types } from "mongoose"
 import jwt from "jsonwebtoken"
 import { IBenefit } from "../models/Benefit.model";
+import { ICreditCard } from "../models/CreditCard.model";
 
 interface MyToken {
     exp:number,
     userId:string
+}
+
+export interface PopulatedBenefit extends IBenefit {
+    creditCard: ICreditCard
 }
 
 const getRecommendations = async (req: Request, res: Response) => {
