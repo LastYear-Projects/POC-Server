@@ -97,6 +97,7 @@ const getRecommendations = (
     );
     if (bestBenefitMapObject) {
       evaluatedCreditCard.grade += bestBenefitMapObject.grade;
+      evaluatedCreditCard.profit += bestBenefitMapObject.grade;
     }
   });
 
