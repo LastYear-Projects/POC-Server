@@ -11,7 +11,7 @@ export type EvaluatedCreditCard = {
   profit: number;
 };
 
-const calculateGrade = (
+const calculateBenefitGradeAndProfit = (
   benefit: IBenefit,
   transactionPrice: number,
   userPreferences: UserPreferences
@@ -77,7 +77,7 @@ const gradeBenefits = (
   userPreferences: UserPreferences
 ) => {
   return benefits.map((benefit) => {
-    const calculatedGrade = calculateGrade(benefit, transactionAmount, userPreferences)
+    const calculatedGrade = calculateBenefitGradeAndProfit(benefit, transactionAmount, userPreferences)
     const grade = calculatedGrade[0]
     const profit = calculatedGrade[1]
     return {benefit,grade,profit}
