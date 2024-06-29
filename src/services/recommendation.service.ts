@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { PopulatedBenefit } from "../controllers/recommendation.controller";
 import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
 import { ProfitType, UserPreferences } from "../models/User.Model";
@@ -86,7 +86,7 @@ const gradeBenefits = (
 
 const findBestBenefit = (
   gradedBenefits: { benefit: IBenefit; grade: number; profit: number }[],
-  creditCardId: mongoose.Schema.Types.ObjectId
+  creditCardId: Types.ObjectId
 ) => {
   return gradedBenefits
     .filter(

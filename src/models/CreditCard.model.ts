@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface ICreditCard {
+export interface ICreditCard extends Document {
     cardName: String;
     pointValue: number;
 }

@@ -13,8 +13,8 @@ export enum ValueType {
     NUMBER = "number",
 }
 
-export interface IBenefit {
-    businessId?: mongoose.Schema.Types.ObjectId;
+export interface IBenefit extends Document {
+    businessId?: Types.ObjectId;
     creditCardId: Types.ObjectId;
     discountType: DiscountType;
     valueType:ValueType ;
