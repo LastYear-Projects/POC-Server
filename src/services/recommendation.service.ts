@@ -2,20 +2,28 @@ import mongoose, { Types } from "mongoose";
 import { PopulatedBenefit } from "../controllers/recommendation.controller";
 import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
 import { ProfitType, UserPreferences } from "../models/User.Model";
+import creditCardService from "./creditCard.service";
+import { ICreditCard } from "../models/CreditCard.model";
 
-const userPreferenceModifier = 3;
+const USER_PREFERENCE_MODIFIER = 3;
 
 export type EvaluatedCreditCard = {
-  creditCardId: mongoose.Schema.Types.ObjectId;
+  creditCardId: Types.ObjectId;
   grade: number;
   profit: number;
+};
+
+type UserPreferencesWithCreditCards = {
+  profitType: ProfitType;
+  cardsPreference: Types.ObjectId[];
+  cards: ICreditCard[];
 };
 
 const calculateBenefitGradeAndProfit = (
   benefit: IBenefit,
   transactionPrice: number,
-  userPreferences: UserPreferences
-): number[] => {
+  userPreferences: UserPreferencesWithCreditCards
+): Promise<number[]> => {
   let profit = 0;
   let grade = 0;
 
@@ -25,44 +33,46 @@ const calculateBenefitGradeAndProfit = (
         benefit.valueType === ValueType.PERCENTAGE
           ? transactionPrice * (benefit.value / 100)
           : benefit.value;
-      grade = 
+      grade =
         userPreferences.profitType === ProfitType.LOWEST_PRICE
-        ? profit * 3
-        : profit
+          ? profit * USER_PREFERENCE_MODIFIER
+          : profit;
       break;
 
     case DiscountType.POINTS:
-      const pointToMoneyValue = benefit.creditCardId.pointValue;
+      const pointToMoneyValue = userPreferences.cards.find(
+        (card) => card._id == benefit.creditCardId
+      ).pointValue;
       profit = benefit.value * pointToMoneyValue;
-      grade = 
-        userPreferences.profitType === ProfitType.POINTS
-        ? profit * 3
-        : profit
+      grade =
+        userPreferences.profitType === ProfitType.POINTS ? profit * 3 : profit;
       break;
   }
-  return [grade, profit];
+  return Promise.resolve([grade, profit]);
 };
 
 const evaluateCreditCardsWithCashBack = (
-  userPreferences: UserPreferences,
+  userPreferences: UserPreferencesWithCreditCards,
   transactionAmount: number,
   benefits: IBenefit[]
 ): EvaluatedCreditCard[] => {
   return userPreferences.cardsPreference.map((creditCard) => {
-    let grade = 0
-    let profit = 0
+    let grade = 0;
+    let profit = 0;
     const cashbackBenefits = benefits.filter((benefit: IBenefit) => {
       benefit.creditCardId === creditCard &&
-      benefit.discountType === DiscountType.CASHBACK
-    })
+        benefit.discountType === DiscountType.CASHBACK;
+    });
     cashbackBenefits.forEach((cashbackBenefit) => {
-      profit += cashbackBenefit.valueType === ValueType.PERCENTAGE
-      ? transactionAmount * (cashbackBenefit.value / 100)
-      : cashbackBenefit.value;
-    })
-    grade = userPreferences.profitType === ProfitType.LOWEST_PRICE
-    ? profit * 3
-    : profit
+      profit +=
+        cashbackBenefit.valueType === ValueType.PERCENTAGE
+          ? transactionAmount * (cashbackBenefit.value / 100)
+          : cashbackBenefit.value;
+    });
+    grade =
+      userPreferences.profitType === ProfitType.LOWEST_PRICE
+        ? profit * USER_PREFERENCE_MODIFIER
+        : profit;
     return {
       creditCardId: creditCard,
       grade: grade,
@@ -74,13 +84,17 @@ const evaluateCreditCardsWithCashBack = (
 const gradeBenefits = (
   benefits: IBenefit[],
   transactionAmount: number,
-  userPreferences: UserPreferences
+  userPreferences: UserPreferencesWithCreditCards
 ) => {
-  return benefits.map((benefit) => {
-    const calculatedGrade = calculateBenefitGradeAndProfit(benefit, transactionAmount, userPreferences)
-    const grade = calculatedGrade[0]
-    const profit = calculatedGrade[1]
-    return {benefit,grade,profit}
+  return benefits.map((benefit: IBenefit) => {
+    const calculatedGrade = calculateBenefitGradeAndProfit(
+      benefit,
+      transactionAmount,
+      userPreferences
+    );
+    const grade: number = calculatedGrade[0];
+    const profit: number = calculatedGrade[1];
+    return { benefit, grade, profit };
   });
 };
 
@@ -89,20 +103,34 @@ const findBestBenefit = (
   creditCardId: Types.ObjectId
 ) => {
   return gradedBenefits
-    .filter(
-      (mapObject) =>
-        mapObject.benefit.creditCardId === creditCardId
-    )
+    .filter((mapObject) => mapObject.benefit.creditCardId === creditCardId)
     .sort((a, b) => b.grade - a.grade)[0];
 };
 
-const getRecommendations = (
+const getCreditCardsById = async (cardsIds: Types.ObjectId[]) => {
+  const creditCards: ICreditCard[] = [];
+  for (let i = 0; i < cardsIds.length; i++) {
+    creditCards.push(await creditCardService.getById(cardsIds[i]));
+  }
+  return creditCards;
+};
+
+const getRecommendations = async (
   populatedBenefits: IBenefit[],
   userPreferences: UserPreferences,
   transactionAmount: number
-): EvaluatedCreditCard[] => {
+): Promise<EvaluatedCreditCard[]> => {
+  const userCreditCards = await getCreditCardsById(
+    userPreferences.cardsPreference
+  );
+  const extendedUserPreferences: UserPreferencesWithCreditCards = {
+    profitType: userPreferences.profitType,
+    cards: userCreditCards,
+    cardsPreference: userPreferences.cardsPreference,
+  };
+
   const evaluatedCreditCards = evaluateCreditCardsWithCashBack(
-    userPreferences,
+    extendedUserPreferences,
     transactionAmount,
     populatedBenefits
   );
@@ -110,7 +138,7 @@ const getRecommendations = (
   const gradedBenefits = gradeBenefits(
     populatedBenefits,
     transactionAmount,
-    userPreferences
+    extendedUserPreferences
   );
 
   evaluatedCreditCards.forEach((evaluatedCreditCard) => {
