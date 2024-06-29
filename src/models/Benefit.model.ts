@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { Document } from "mongoose";
+import { ICreditCard } from "./CreditCard.model";
 export enum DiscountType {
     POINTS = "points",
     CASHBACK = "cashback", //User cannot choose cashback as an option, Its an added bonus to
@@ -11,9 +13,9 @@ export enum ValueType {
     NUMBER = "number",
 }
 
-export interface IBenefit {
+export interface IBenefit extends Document {
     businessId?: mongoose.Schema.Types.ObjectId;
-    creditCardId: mongoose.Schema.Types.ObjectId;
+    creditCardId: mongoose.Schema.Types.ObjectId | ICreditCard;
     discountType: DiscountType;
     valueType:ValueType ;
     value: number;
