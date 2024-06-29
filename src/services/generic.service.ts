@@ -5,8 +5,8 @@ const service = (Model: mongoose.Model<any>) => {
     const getAll = async (queryParams:Object) => {
         if(Model.modelName == "benefit"){
             const query = [
-                {path: "businessId", select: " -_id"}, //TODO: check if we need to change it to path: business
-                {path: "creditCardId", select: " -_id"} //TODO: check if we need to change it to path: creditCard
+                {path: "business", select: " -_id"}, //TODO: check if we need to change it to path: business
+                {path: "creditCard"} //TODO: check if we need to change it to path: creditCard
             ]
             return await Model.find(queryParams).populate(query).exec();
         } 
