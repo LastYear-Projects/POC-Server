@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { ZodSchema } from "zod";
 import jwt from "jsonwebtoken";
 import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
+import { Types } from "mongoose";
+import creditCardService from "../services/creditCard.service";
+import { ICreditCard } from "../models/CreditCard.model";
 const validateRequest =
   (schema: ZodSchema<any>) =>
   (req: Request, res: Response, next: NextFunction) => {
@@ -39,16 +42,18 @@ const validateRecommendationRequest = (req: Request, res: Response, next: NextFu
   next();
 };
 
-const validateAddBenefit = (req: Request, res: Response, next: NextFunction) => {
+const validateAddBenefit = async (req: Request, res: Response, next: NextFunction) => {
   const benefit: IBenefit = req.body; 
+  const creditCardId: Types.ObjectId = benefit.creditCardId;
+  const creditCard: ICreditCard = await creditCardService.getById(creditCardId);
   let value = benefit.value;
   let errorMessage;
-  if(benefit.discountType == DiscountType.POINTS && !benefit.pointsValue) errorMessage="points must have a value";
+  if(benefit.discountType == DiscountType.POINTS && !creditCard.pointValue) errorMessage="points must have a value";
   else if(benefit.valueType == ValueType.NUMBER && !benefit.minPurchaseAmount) errorMessage="a discount with NUMBER value type should include minimun purchase amount";
   else if(benefit.valueType == ValueType.PERCENTAGE && value > 100) errorMessage="a discount with PERCENTAGE value type should be less than 100";
   else if(benefit.valueType == ValueType.NUMBER) {
     if(benefit.discountType == DiscountType.POINTS) 
-      value = value*benefit.pointsValue
+      value = value* creditCard.pointValue
     if(benefit.minPurchaseAmount && benefit.minPurchaseAmount < value) errorMessage="a discount must not be higher than the minimum purchase amount";
   }
 

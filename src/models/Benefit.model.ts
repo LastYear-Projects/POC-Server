@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import { ICreditCard } from "./CreditCard.model";
 export enum DiscountType {
     POINTS = "points",
@@ -13,9 +13,9 @@ export enum ValueType {
     NUMBER = "number",
 }
 
-export interface IBenefit extends Document {
+export interface IBenefit {
     businessId?: mongoose.Schema.Types.ObjectId;
-    creditCardId: mongoose.Schema.Types.ObjectId | ICreditCard;
+    creditCardId: Types.ObjectId;
     discountType: DiscountType;
     valueType:ValueType ;
     value: number;
