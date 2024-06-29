@@ -1,6 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 
-
+//
 export enum ProfitType {
   POINTS = "points",
   LOWEST_PRICE = "lowestPrice",
@@ -9,7 +9,7 @@ export enum ProfitType {
 
 export type UserPreferences = {
   profitType: ProfitType,
-  cardsPreference: mongoose.Schema.Types.ObjectId[]
+  cardsPreference: Types.ObjectId[]
 }
 
 export interface IUser extends Document {
@@ -17,7 +17,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
-  creditCards: mongoose.Schema.Types.ObjectId[];
+  creditCards: Types.ObjectId[];
   userPreferences: UserPreferences
 }
 
