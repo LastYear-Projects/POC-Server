@@ -1,8 +1,8 @@
 import { IBenefit } from "../models/Benefit.model"
-import { UserPreference } from "../models/User.Model"
+import { UserPreferences } from "../models/User.Model"
 
 
-const getRecommendations = async (benefits:IBenefit[] , userPreference:UserPreference, transactionAmount: number) => {
+const getRecommendations = async (benefits:IBenefit[] , userPreference:UserPreferences, transactionAmount: number) => {
 
 }
 

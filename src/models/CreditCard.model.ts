@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface ICreditCard {
     cardName: String;
-    pointValue: Number;
+    pointValue: number;
 }
 
 const CreditCardSchema = new mongoose.Schema<ICreditCard>({
