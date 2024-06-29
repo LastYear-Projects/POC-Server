@@ -8,7 +8,6 @@ const benefitSchema = z.object({
   discountType: discountType,
   valueType: valueType,
   value: z.number(),
-  pointsValue: z.number().optional(),
   maxProfit: z.number().optional(),
   minPurchaseAmount: z.number().optional(),
 });

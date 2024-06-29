@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { PopulatedBenefit } from "../controllers/recommendation.controller";
-import { DiscountType, ValueType } from "../models/Benefit.model";
+import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
 import { UserPreferences } from "../models/User.Model";
 
 export type EvaluatedCreditCard = {
@@ -10,23 +10,22 @@ export type EvaluatedCreditCard = {
 };
 
 const calculateGrade = (
-  populatedBenefit: PopulatedBenefit,
+  benefit: IBenefit,
   transactionPrice: number
 ): number => {
   let grade = 0;
 
-  switch (populatedBenefit.discountType) {
+  switch (benefit.discountType) {
     case DiscountType.DISCOUNT:
-      if (populatedBenefit.valueType === ValueType.PERCENTAGE) {
-        grade =
-          transactionPrice - transactionPrice * (populatedBenefit.value / 100);
+      if (benefit.valueType === ValueType.PERCENTAGE) {
+        grade = transactionPrice - transactionPrice * (benefit.value / 100);
       } else {
-        grade = transactionPrice - populatedBenefit.value;
+        grade = transactionPrice - benefit.value;
       }
       break;
     case DiscountType.POINTS:
-      const pointToMoneyValue = populatedBenefit.creditCard.pointToMoney;
-      grade = transactionPrice - populatedBenefit.value * pointToMoneyValue;
+      const pointToMoneyValue = benefit.creditCardId.pointValue;
+      grade = transactionPrice - benefit.value * pointToMoneyValue;
       break;
   }
   return transactionPrice - grade;
@@ -34,17 +33,17 @@ const calculateGrade = (
 
 const evaluatedCreditCardsWithCashBack = (
   userPreferences: UserPreferences,
-  populatedBenefits: PopulatedBenefit[]
+  benefits: IBenefit[]
 ): EvaluatedCreditCard[] => {
   return userPreferences.cardsPreference.map((creditCard) => {
-    const cashBackBenefit = populatedBenefits.find(
+    const cashBackBenefit = benefits.find(
       (benefit) =>
         benefit.creditCardId === creditCard &&
         benefit.discountType === DiscountType.CASHBACK &&
         !benefit.businessId
     );
     const cashbackValue =
-      cashBackBenefit?.creditCard.pointToMoney * cashBackBenefit?.value || 0;
+      cashBackBenefit?.creditCardId.pointValue * cashBackBenefit?.value || 0;
     return {
       creditCardId: creditCard,
       grade: cashbackValue,
@@ -53,30 +52,27 @@ const evaluatedCreditCardsWithCashBack = (
   });
 };
 
-const gradePopulatedBenefits = (
-  populatedBenefits: PopulatedBenefit[],
-  transactionAmount: number
-) => {
-  return populatedBenefits.map((populatedBenefit) => ({
-    populatedBenefit,
-    grade: calculateGrade(populatedBenefit, transactionAmount),
+const gradeBenefits = (benefits: IBenefit[], transactionAmount: number) => {
+  return benefits.map((benefit) => ({
+    benefit,
+    grade: calculateGrade(benefit, transactionAmount),
   }));
 };
 
 const findBestBenefit = (
-  gradedPopulatedBenefits: { populatedBenefit: PopulatedBenefit; grade: number }[],
+  gradedBenefits: { benefit: IBenefit; grade: number }[],
   creditCardId: mongoose.Schema.Types.ObjectId
 ) => {
-  return gradedPopulatedBenefits
+  return gradedBenefits
     .filter(
       (populatedMapObject) =>
-        populatedMapObject.populatedBenefit.creditCardId === creditCardId
+        populatedMapObject.benefit.creditCardId === creditCardId
     )
     .sort((a, b) => b.grade - a.grade)[0];
 };
 
 const getRecommendations = (
-  populatedBenefits: PopulatedBenefit[],
+  populatedBenefits: IBenefit[],
   userPreferences: UserPreferences,
   transactionAmount: number
 ): EvaluatedCreditCard[] => {
@@ -85,14 +81,11 @@ const getRecommendations = (
     populatedBenefits
   );
 
-  const gradedPopulatedBenefits = gradePopulatedBenefits(
-    populatedBenefits,
-    transactionAmount
-  );
+  const gradedBenefits = gradeBenefits(populatedBenefits, transactionAmount);
 
   evaluatedCreditCards.forEach((evaluatedCreditCard) => {
     const bestBenefitMapObject = findBestBenefit(
-      gradedPopulatedBenefits,
+      gradedBenefits,
       evaluatedCreditCard.creditCardId
     );
     if (bestBenefitMapObject) {
@@ -101,7 +94,7 @@ const getRecommendations = (
     }
   });
 
-  return evaluatedCreditCards.sort((a, b) => b.grade - a.grade);
+  return evaluatedCreditCards;
 };
 
 export default {

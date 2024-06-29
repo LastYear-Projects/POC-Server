@@ -1,24 +1,19 @@
 import mongoose from "mongoose";
 
 export interface ICreditCard {
-  cardName: String;
-  pointToMoney: number;
+    cardName: String;
+    pointValue: Number;
 }
 
 const CreditCardSchema = new mongoose.Schema<ICreditCard>({
-  cardName: {
-    type: String,
-    required: true,
-  },
-  pointToMoney: {
-    type: Number,
-    default: 0,
-  },
-});
+    cardName: {
+        type: String,
+        required:true
+    },
+    pointValue: {
+        type: Number
+    }
+})
 
-const CreditCard = mongoose.model<ICreditCard>(
-  "creditCard",
-  CreditCardSchema,
-  "creditCards"
-);
+const CreditCard = mongoose.model<ICreditCard>("creditCard", CreditCardSchema, "creditCards")
 export default CreditCard;

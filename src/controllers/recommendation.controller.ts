@@ -26,7 +26,7 @@ const getRecommendations = async (req: Request, res: Response) => {
         const user= await userService.getById(id)
         if(!user) return res.status(400).json({error: "user not found"})
         const userCards=user.creditCards;
-        const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessName:businessName},{businessName:null}], })
+        const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessName:businessName},{businessName:null}] })
         const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || benefit.minPurchaseAmount<Number(transactionAmount));
         const recommendations = await recommendationService.getRecommendations(filteredBenefits,user.userPreference, Number(transactionAmount));
         return res.json(recommendations)
