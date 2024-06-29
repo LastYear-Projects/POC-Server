@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface IBusiness {
+export interface IBusiness extends Document {
     businessName: String
 }
 

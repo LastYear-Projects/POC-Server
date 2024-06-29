@@ -1,7 +1,4 @@
-import mongoose, { Types } from "mongoose";
-
-
-
+import mongoose, { Document, Types } from "mongoose";
 
 
 export enum ProfitType {
@@ -15,7 +12,7 @@ export type UserPreferences {
   cardsPreference: Types.ObjectId[]
 }
 
-export interface IUser {
+export interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
