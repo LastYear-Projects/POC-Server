@@ -1,6 +1,7 @@
 import { z } from "zod";
 import objectIdSchema from "./objectIdSchema";
-import { UserPreference } from "../models/User.Model";
+import { userPreferences } from "./types";
+
 
 const nameRegex=/^[a-zA-Z]+$/
 
@@ -10,7 +11,7 @@ const userSchema = z.object({
     email:z.string().email("invalid email was inserted"),
     password:z.string().min(8,"password must be at least 8 characters"),
     creditCards:z.array(objectIdSchema).optional(),
-    userPreference:z.enum([UserPreference.POINTS,UserPreference.NOMINAL_PROFIT,UserPreference.LOWEST_PRICE]).optional()
+    userPreferences: userPreferences
 })
 
 export default userSchema

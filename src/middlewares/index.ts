@@ -50,7 +50,7 @@ const validateAddBenefit = async (req: Request, res: Response, next: NextFunctio
   let errorMessage;
   if(benefit.discountType == DiscountType.POINTS && !creditCard.pointValue) errorMessage="points must have a value";
   else if(benefit.valueType == ValueType.NUMBER && !benefit.minPurchaseAmount) errorMessage="a discount with NUMBER value type should include minimun purchase amount";
-  else if(benefit.valueType == ValueType.PERCENTAGE && value > 100) errorMessage="a discount with PERCENTAGE value type should be less than 100";
+  else if(benefit.valueType == ValueType.PERCENTAGE && (value > 100 || value < 0)) errorMessage="a discount with PERCENTAGE value type should be less than 100 and greater than 0";
   else if(benefit.valueType == ValueType.NUMBER) {
     if(benefit.discountType == DiscountType.POINTS) 
       value = value* creditCard.pointValue

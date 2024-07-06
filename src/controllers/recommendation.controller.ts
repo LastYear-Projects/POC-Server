@@ -5,6 +5,7 @@ import benefitService from "../services/benefit.service";
 import { Types } from "mongoose"
 import jwt from "jsonwebtoken"
 import { IBenefit } from "../models/Benefit.model";
+import { IUser } from "../models/User.Model";
 
 interface MyToken {
     exp:number,
@@ -18,12 +19,12 @@ const getRecommendations = async (req: Request, res: Response) => {
     const id=new Types.ObjectId(userId)
     const {transactionAmount,businessName} = req.query
     try{
-        const user= await userService.getById(id)
+        const user:IUser= await userService.getById(id)
         if(!user) return res.status(400).json({error: "user not found"})
         const userCards=user.creditCards;
         const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessName:businessName},{businessName:null}] })
         const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || benefit.minPurchaseAmount<Number(transactionAmount));
-        const recommendations = await recommendationService.getRecommendations(filteredBenefits,user.userPreference, Number(transactionAmount));
+        const recommendations = await recommendationService.getRecommendations(filteredBenefits,user.userPreferences, Number(transactionAmount));
         return res.json(recommendations)
     } catch (error: any){
         return res.status(500).json({error: "error in getRecommendations " + error.message})
