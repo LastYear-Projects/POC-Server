@@ -2,17 +2,17 @@ POST http://localhost:1212/recommendation/
 Content-Type: application/json
 
 {
-  "transactionAmount": 200,
+  "transactionAmount": 300,
   "user": {
-    "_id": "60d0fe4f5311236168a109ca",
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
+    "_id": "60d0fe4f5311236168a109cb",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
     "password": "hashedpassword",
-    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cO"],
+    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"],
     "userPreferences": {
-      "profitType": "LOWEST_PRICE",
-      "cardsPreference": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cO"]
+      "profitType": "POINTS",
+      "cardsPreference": ["60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109c0"]
     }
   },
   "benefits": [
@@ -21,23 +21,23 @@ Content-Type: application/json
       "creditCardId": "60d0fe4f5311236168a109cb",
       "discountType": "DISCOUNT",
       "valueType": "PERCENTAGE",
-      "value": 10,
-      "maxProfit": 50
+      "value": 15,
+      "maxProfit": 60
     },
     {
       "businessId": "60d0fe4f5311236168a109ce",
       "creditCardId": "60d0fe4f5311236168a109cc",
       "discountType": "POINTS",
       "valueType": "NUMBER",
-      "value": 100,
-      "minPurchaseAmount": 500
+      "value": 150,
+      "minPurchaseAmount": 300
     },
     {
-      "creditCardId": "60d0fe4f5311236168a109cO",
+      "creditCardId": "60d0fe4f5311236168a109c0",
       "discountType": "DISCOUNT",
       "valueType": "NUMBER",
       "value": 50,
-      "minPurchaseAmount": 150
+      "minPurchaseAmount": 200
     }
   ]
 }

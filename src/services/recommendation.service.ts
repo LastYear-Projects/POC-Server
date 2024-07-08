@@ -176,3 +176,225 @@ const getRecommendations = async (
 export default {
   getRecommendations,
 };
+
+//#region Dummy Data
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//#region profitType Points
+/*
+{
+  "transactionAmount": 300,
+  "user": {
+    "_id": "60d0fe4f5311236168a109cb",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "password": "hashedpassword",
+    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"],
+    "userPreferences": {
+      "profitType": "POINTS",
+      "cardsPreference": ["60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109c0"]
+    }
+  },
+  "benefits": [
+    {
+      "businessId": "60d0fe4f5311236168a109cd",
+      "creditCardId": "60d0fe4f5311236168a109cb",
+      "discountType": "DISCOUNT",
+      "valueType": "PERCENTAGE",
+      "value": 15,
+      "maxProfit": 60
+    },
+    {
+      "businessId": "60d0fe4f5311236168a109ce",
+      "creditCardId": "60d0fe4f5311236168a109cc",
+      "discountType": "POINTS",
+      "valueType": "NUMBER",
+      "value": 150,
+      "minPurchaseAmount": 300
+    },
+    {
+      "creditCardId": "60d0fe4f5311236168a109c0",
+      "discountType": "DISCOUNT",
+      "valueType": "NUMBER",
+      "value": 50,
+      "minPurchaseAmount": 200
+    }
+  ]
+}
+*/
+
+//#region Result for profitType Points
+/*
+[
+  {
+    "creditCardId": "60d0fe4f5311236168a109cc",
+    "grade": 180, // (transactionAmount * 0.15)
+    "profit": 45   // (transactionAmount * 0.15)
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109cb",
+    "grade": 45,   // (transactionAmount * 0.15)
+    "profit": 45   // (transactionAmount * 0.15)
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109c0",
+    "grade": 50,
+    "profit": 50
+  }
+]
+
+Explanation of Results
+Card B (60d0fe4f5311236168a109cc): Jane's top preference for points. Based on the benefit configuration, she earns 150 points for a transaction amount of 300, which translates to a grade and profit of 180 points (transactionAmount * 0.15).
+Card A (60d0fe4f5311236168a109cb): Earns 45 points (transactionAmount * 0.15) based on the configured discount percentage.
+Card C (60d0fe4f5311236168a109c0): Provides a flat discount of 50 based on the configured benefit.
+*/
+//#endregion
+
+//#region profitType: Lowest_price
+/*
+{
+  "transactionAmount": 250,
+  "user": {
+    "_id": "60d0fe4f5311236168a109cc",
+    "firstName": "Michael",
+    "lastName": "Johnson",
+    "email": "michael.johnson@example.com",
+    "password": "hashedpassword",
+    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"],
+    "userPreferences": {
+      "profitType": "LOWEST_PRICE",
+      "cardsPreference": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"]
+    }
+  },
+  "benefits": [
+    {
+      "businessId": "60d0fe4f5311236168a109cd",
+      "creditCardId": "60d0fe4f5311236168a109cb",
+      "discountType": "DISCOUNT",
+      "valueType": "PERCENTAGE",
+      "value": 20,
+      "maxProfit": 50
+    },
+    {
+      "businessId": "60d0fe4f5311236168a109ce",
+      "creditCardId": "60d0fe4f5311236168a109cc",
+      "discountType": "POINTS",
+      "valueType": "NUMBER",
+      "value": 200,
+      "minPurchaseAmount": 400
+    },
+    {
+      "creditCardId": "60d0fe4f5311236168a109c0",
+      "discountType": "CASHBACK",
+      "valueType": "PERCENTAGE",
+      "value": 5
+    }
+  ]
+}
+*/
+//#region Result for profitType Lowest_price
+/*
+[
+  {
+    "creditCardId": "60d0fe4f5311236168a109cb",
+    "grade": 50,   // (transactionAmount * 0.20)
+    "profit": 50   // (transactionAmount * 0.20)
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109cc",
+    "grade": 0,    // No points earned as transactionAmount < minPurchaseAmount
+    "profit": 0
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109c0",
+    "grade": 12.5, // (transactionAmount * 0.05)
+    "profit": 12.5 // (transactionAmount * 0.05)
+  }
+]
+
+Explanation of Results
+Card A (60d0fe4f5311236168a109cb): Michael prefers lowest price, so the algorithm selects the highest discount percentage benefit, earning him 50 points (transactionAmount * 0.20).
+Card B (60d0fe4f5311236168a109cc): No points are earned because the transaction amount is below the minimum purchase amount required for points.
+Card C (60d0fe4f5311236168a109c0): Provides a cashback of 5% based on the transaction amount, resulting in 12.5 points (transactionAmount * 0.05).
+*/
+//#endregion
+
+//#region profitType Nominal_profit
+/* 
+{
+  "transactionAmount": 300,
+  "user": {
+    "_id": "60d0fe4f5311236168a109cd",
+    "firstName": "Emily",
+    "lastName": "Smith",
+    "email": "emily.smith@example.com",
+    "password": "hashedpassword",
+    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"],
+    "userPreferences": {
+      "profitType": "NOMINAL_PROFIT",
+      "cardsPreference": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109c0"]
+    }
+  },
+  "benefits": [
+    {
+      "businessId": "60d0fe4f5311236168a109cd",
+      "creditCardId": "60d0fe4f5311236168a109cb",
+      "discountType": "DISCOUNT",
+      "valueType": "PERCENTAGE",
+      "value": 15,
+      "maxProfit": 50
+    },
+    {
+      "businessId": "60d0fe4f5311236168a109ce",
+      "creditCardId": "60d0fe4f5311236168a109cc",
+      "discountType": "POINTS",
+      "valueType": "NUMBER",
+      "value": 150,
+      "minPurchaseAmount": 400
+    },
+    {
+      "creditCardId": "60d0fe4f5311236168a109c0",
+      "discountType": "CASHBACK",
+      "valueType": "PERCENTAGE",
+      "value": 7
+    }
+  ]
+}
+*/
+//#region Result for profitType Nominal_profit
+/* 
+[
+  {
+    "creditCardId": "60d0fe4f5311236168a109cb",
+    "grade": 45,   // (transactionAmount * 0.15)
+    "profit": 45   // (transactionAmount * 0.15)
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109cc",
+    "grade": 150,  // Fixed profit of 150 because transactionAmount >= minPurchaseAmount
+    "profit": 150
+  },
+  {
+    "creditCardId": "60d0fe4f5311236168a109c0",
+    "grade": 21,   // (transactionAmount * 0.07)
+    "profit": 21   // (transactionAmount * 0.07)
+  }
+]
+Explanation of Results
+Card A (60d0fe4f5311236168a109cb): Emily prefers nominal profit, so the algorithm selects the highest discount percentage benefit, earning her 45 points (transactionAmount * 0.15).
+Card B (60d0fe4f5311236168a109cc): Earns a fixed profit of 150 points because the transaction amount meets the minimum purchase amount required for points.
+Card C (60d0fe4f5311236168a109c0): Provides a cashback of 7% based on the transaction amount, resulting in 21 points (transactionAmount * 0.07).
+*/
+//#endregion
