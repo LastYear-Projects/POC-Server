@@ -1,41 +1,74 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import userService from "../services/user.service";
 import recommendationService from "../services/recommendation.service";
 import benefitService from "../services/benefit.service";
-import { Types } from "mongoose"
-import jwt from "jsonwebtoken"
+import { Types } from "mongoose";
+import jwt from "jsonwebtoken";
 import { IBenefit } from "../models/Benefit.model";
 import { ICreditCard } from "../models/CreditCard.model";
 
 interface MyToken {
-    exp:number,
-    userId:string
+  exp: number;
+  userId: string;
 }
 
 export interface PopulatedBenefit extends IBenefit {
-    creditCard: ICreditCard
+  creditCard: ICreditCard;
 }
 
 const getRecommendations = async (req: Request, res: Response) => {
-    const token=req.header["authorization"]
-    const decodedToken=jwt.decode(token) as MyToken
-    const userId=decodedToken.userId
-    const id=new Types.ObjectId(userId)
-    const {transactionAmount,businessName} = req.query
-    try{
-        const user= await userService.getById(id)
-        if(!user) return res.status(400).json({error: "user not found"})
-        const userCards=user.creditCards;
-        const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessName:businessName},{businessName:null}] })
-        const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || benefit.minPurchaseAmount<Number(transactionAmount));
-        const recommendations = await recommendationService.getRecommendations(filteredBenefits,user.userPreference, Number(transactionAmount));
-        return res.json(recommendations)
-    } catch (error: any){
-        return res.status(500).json({error: "error in getRecommendations " + error.message})
-    }
+  const token = req.header["authorization"];
+  const decodedToken = jwt.decode(token) as MyToken;
+  const userId = decodedToken.userId;
+  const id = new Types.ObjectId(userId);
+  const { transactionAmount, businessName } = req.query;
+  try {
+    const user = await userService.getById(id);
+    if (!user) return res.status(400).json({ error: "user not found" });
+    const userCards = user.creditCards;
+    const benefits: IBenefit[] = await benefitService.getAll({
+      creditCardId: { $in: userCards },
+      $or: [{ businessName: businessName }, { businessName: null }],
+    });
+    const filteredBenefits = benefits.filter(
+      (benefit) =>
+        benefit.minPurchaseAmount == undefined ||
+        benefit.minPurchaseAmount < Number(transactionAmount)
+    );
+    const recommendations = await recommendationService.getRecommendations(
+      filteredBenefits,
+      user.userPreference,
+      Number(transactionAmount)
+    );
+    return res.json(recommendations);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ error: "error in getRecommendations " + error.message });
+  }
+};
 
+/***
+ * Recommendation function used for POC testing, Remove when done with testing.
+ */
+const getRecommendationsTest = async (req: Request, res: Response) => {
+  const { transactionAmount, user, benefits } = req.body;
+  try {
+    if (!user) return res.status(400).json({ error: "user not found" });
+    const recommendations = await recommendationService.getRecommendations(
+      benefits,
+      user.userPreferences,
+      Number(transactionAmount)
+    );
+    return res.json(recommendations);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ error: "error in getRecommendations " + error.message });
+  }
+};
 
-}
 export default {
-    getRecommendations
-}
+  getRecommendations,
+  getRecommendationsTest,
+};

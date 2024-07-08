@@ -1,0 +1,43 @@
+POST http://localhost:1212/recommendation/
+Content-Type: application/json
+
+{
+  "transactionAmount": 200,
+  "user": {
+    "_id": "60d0fe4f5311236168a109ca",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "password": "hashedpassword",
+    "creditCards": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cO"],
+    "userPreferences": {
+      "profitType": "LOWEST_PRICE",
+      "cardsPreference": ["60d0fe4f5311236168a109cb", "60d0fe4f5311236168a109cc", "60d0fe4f5311236168a109cO"]
+    }
+  },
+  "benefits": [
+    {
+      "businessId": "60d0fe4f5311236168a109cd",
+      "creditCardId": "60d0fe4f5311236168a109cb",
+      "discountType": "DISCOUNT",
+      "valueType": "PERCENTAGE",
+      "value": 10,
+      "maxProfit": 50
+    },
+    {
+      "businessId": "60d0fe4f5311236168a109ce",
+      "creditCardId": "60d0fe4f5311236168a109cc",
+      "discountType": "POINTS",
+      "valueType": "NUMBER",
+      "value": 100,
+      "minPurchaseAmount": 500
+    },
+    {
+      "creditCardId": "60d0fe4f5311236168a109cO",
+      "discountType": "DISCOUNT",
+      "valueType": "NUMBER",
+      "value": 50,
+      "minPurchaseAmount": 150
+    }
+  ]
+}

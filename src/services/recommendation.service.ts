@@ -16,7 +16,7 @@ export type EvaluatedCreditCard = {
 type UserPreferencesWithCreditCards = {
   profitType: ProfitType;
   cardsPreference: Types.ObjectId[];
-  cards: ICreditCard[];
+  cards: any[];
 };
 
 const calculateBenefitGradeAndProfit = (
@@ -107,6 +107,7 @@ const findBestBenefit = (
     .sort((a, b) => b.grade - a.grade)[0];
 };
 
+//TODO - function will be in different file.
 const getCreditCardsById = async (cardsIds: Types.ObjectId[]) => {
   const creditCards: ICreditCard[] = [];
   for (let i = 0; i < cardsIds.length; i++) {
@@ -115,14 +116,31 @@ const getCreditCardsById = async (cardsIds: Types.ObjectId[]) => {
   return creditCards;
 };
 
+//Local data:
+const localCreditCards = [
+  {
+    _id: "60d0fe4f5311236168a109cb",
+    cardName: "Card A",
+    pointValue: 0.01,
+  },
+  {
+    _id: "60d0fe4f5311236168a109cc",
+    cardName: "Card B",
+    pointValue: 0.02,
+  },
+  {
+    _id: "60d0fe4f5311236168a109cO",
+    cardName: "Card C",
+  },
+];
+
 const getRecommendations = async (
   populatedBenefits: IBenefit[],
   userPreferences: UserPreferences,
   transactionAmount: number
 ): Promise<EvaluatedCreditCard[]> => {
-  const userCreditCards = await getCreditCardsById(
-    userPreferences.cardsPreference
-  );
+  const userCreditCards = localCreditCards;
+
   const extendedUserPreferences: UserPreferencesWithCreditCards = {
     profitType: userPreferences.profitType,
     cards: userCreditCards,

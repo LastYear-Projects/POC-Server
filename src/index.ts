@@ -7,6 +7,7 @@ import connectDB from "./config/DBConnection";
 import creditCardRouter from "./routes/cards.routes";
 import businessRouter from "./routes/businesses.routes";
 import benefitRouter from "./routes/benefits.routes";
+import recommendationRouter from "./routes/recommendation.routes";
 
 import {BLUE, RESET_COLOR} from './constants/index'
 dotenv.config();
@@ -20,7 +21,8 @@ app.use(cors());
 
 app.use("/cards", creditCardRouter);
 app.use("/businesses", businessRouter)
-app.use("/benefits", benefitRouter)
+app.use("/benefits", benefitRouter);
+app.use("/recommendation", recommendationRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");

@@ -1,16 +1,15 @@
 import mongoose, { Document, Types } from "mongoose";
 
-//
 export enum ProfitType {
   POINTS = "points",
   LOWEST_PRICE = "lowestPrice",
-  NOMINAL_PROFIT="nominalProfit"
+  NOMINAL_PROFIT = "nominalProfit",
 }
 
 export type UserPreferences = {
-  profitType: ProfitType,
-  cardsPreference: Types.ObjectId[]
-}
+  profitType: ProfitType;
+  cardsPreference: Types.ObjectId[];
+};
 
 export interface IUser extends Document {
   firstName: string;
@@ -18,23 +17,24 @@ export interface IUser extends Document {
   email: string;
   password: string;
   creditCards: Types.ObjectId[];
-  userPreferences: UserPreferences
+  userPreferences: UserPreferences;
 }
 
-
-const UserPreferencesSchema = new mongoose.Schema<UserPreferences>({
-  profitType: {
-    type: String,
-    enum: Object.values(ProfitType),
-    default: ProfitType.NOMINAL_PROFIT,
+const UserPreferencesSchema = new mongoose.Schema<UserPreferences>(
+  {
+    profitType: {
+      type: String,
+      enum: Object.values(ProfitType),
+      default: ProfitType.NOMINAL_PROFIT,
+    },
+    cardsPreference: {
+      type: [Types.ObjectId],
+      default: [],
+      ref: "creditCard", // Assuming you have a CreditCard model
+    },
   },
-  cardsPreference: {
-    type: [Types.ObjectId],
-    default: [],
-    ref: 'creditCard' // Assuming you have a CreditCard model
-  }
-
-}, { _id: false } )
+  { _id: false }
+);
 
 const UserSchema = new mongoose.Schema<IUser>({
   firstName: {
@@ -63,9 +63,9 @@ const UserSchema = new mongoose.Schema<IUser>({
     required: true,
     default: {
       profitType: ProfitType.NOMINAL_PROFIT,
-      cardsPreference: []
-    }
-  }
+      cardsPreference: [],
+    },
+  },
 });
 
 const User = mongoose.model<IUser>("user", UserSchema, "users");
