@@ -1,7 +1,13 @@
 import Benefit from "../models/Benefit.model";
-import genericService from "./generic.service";
+import genericService, { BaseService } from "./generic.service";
 
-const benefitService = genericService(Benefit)
+interface BenefitService extends BaseService {
+
+}
+const benefitService: BenefitService = {
+    ...genericService<BenefitService>(Benefit),
+    
+}
 
 
 

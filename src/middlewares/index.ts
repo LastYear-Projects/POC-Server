@@ -5,6 +5,14 @@ import { DiscountType, IBenefit, ValueType } from "../models/Benefit.model";
 import { Types } from "mongoose";
 import creditCardService from "../services/creditCard.service";
 import { ICreditCard } from "../models/CreditCard.model";
+
+import { JwtPayload } from 'jsonwebtoken';
+
+interface decodedToken {
+  exp:number,
+  userId:string
+}
+
 const validateRequest =
   (schema: ZodSchema<any>) =>
   (req: Request, res: Response, next: NextFunction) => {
@@ -22,13 +30,14 @@ const validateRequest =
     next();
   };
 
-const validateUserToken = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers["authorization"];
+const validateUserToken = (req: Request & {userId: string}, res: Response, next: NextFunction) => {
+  const token: string | JwtPayload = req.headers["authorization"];
   if (!token) return res.status(400).json({ error: "no token provided" });
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, payload:decodedToken) => {
     if (err) {
       return res.status(400).json({ message: "Invalid token" });
     }
+    req.userId = payload.userId; //TODO: check if inject it in authorization headers or add an object to the body
     next();
   });
 };

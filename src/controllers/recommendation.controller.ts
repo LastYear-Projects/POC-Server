@@ -7,23 +7,21 @@ import jwt from "jsonwebtoken"
 import { IBenefit } from "../models/Benefit.model";
 import { IUser } from "../models/User.Model";
 
-interface MyToken {
-    exp:number,
-    userId:string
-}
 
-const getRecommendations = async (req: Request, res: Response) => {
-    const token=req.header["authorization"]
-    const decodedToken=jwt.decode(token) as MyToken
-    const userId=decodedToken.userId
-    const id=new Types.ObjectId(userId)
-    const {transactionAmount,businessName} = req.query
+const getRecommendations = async (req: Request & {userId: Types.ObjectId}, res: Response) => {
+    const userId = req.userId
+
+    const {transactionAmount,businessId} = req.query
     try{
-        const user:IUser= await userService.getById(id)
+        const user:IUser= await userService.getById(userId)
+        console.error(user)
         if(!user) return res.status(400).json({error: "user not found"})
         const userCards=user.creditCards;
-        const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessName:businessName},{businessName:null}] })
+        const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessId:businessId},{businessId:undefined}]})
         const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || benefit.minPurchaseAmount<Number(transactionAmount));
+        console.log("filteredBenefits: ", filteredBenefits)
+        console.log("user.userPreferences: ", user.userPreferences)
+        console.log("transactionAmount: ", Number(transactionAmount))
         const recommendations = await recommendationService.getRecommendations(filteredBenefits,user.userPreferences, Number(transactionAmount));
         return res.json(recommendations)
     } catch (error: any){

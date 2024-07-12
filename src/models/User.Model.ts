@@ -7,18 +7,19 @@ export enum ProfitType {
   NOMINAL_PROFIT="nominalProfit"
 }
 
-export type UserPreferences {
+export type UserPreferences = {
   profitType: ProfitType,
-  cardsPreference: Types.ObjectId[]
+  cardsPreference?: Types.ObjectId[]
 }
 
-export interface IUser extends Document {
+export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   creditCards: Types.ObjectId[];
   userPreferences: UserPreferences
+  _id?: Types.ObjectId
 }
 
 
