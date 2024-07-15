@@ -8,7 +8,7 @@ export enum CardBrand {
 
 export interface ICreditCard extends Document {
     cardName: String;
-    pointValue: number;
+    pointValue?: number;
     cardBrand: CardBrand;
 }
 
@@ -23,7 +23,8 @@ const CreditCardSchema = new mongoose.Schema<ICreditCard>({
         required: true
     },
     pointValue: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 

@@ -14,8 +14,8 @@ const genericService = <T extends BaseService>(Model: mongoose.Model<any>): T =>
   const getAll: BaseService['getAll'] = async (queryParams: Object) => {
     if (Model.modelName === "benefit") {
       const query = [
-        { path: "businessId", select: " -_id -__v" },
-        { path: "creditCardId", select: " -_id -__v" }
+        { path: "businessId", select: " -__v" },
+        { path: "creditCardId", select: "-__v" }
       ];
       return await Model.find(queryParams).populate(query).exec();
     }
