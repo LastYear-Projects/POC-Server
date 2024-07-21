@@ -10,7 +10,9 @@ userRouter
 .get("/", userController.getAllUsers)
 .get("/:id", userController.getUserById)
 .post("/",validateRequest(userSchema),userController.addUser)
-.post("/creditCard", userController.addCreditCard) //TODO: we should apply the validateUserToken middleware here
+.post("/creditCard",validateUserToken,userController.addCreditCard) //TODO: we should apply the validateUserToken middleware here
+//.put("/:id", userController.updateUser)
+.put("/userPreferences",validateUserToken,userController.updateUserPreferences)
 .delete("/", userController.deleteAllUsers)
 .delete("/:id",  userController.deleteUserById)
 

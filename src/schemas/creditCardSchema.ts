@@ -5,6 +5,7 @@ const creditCardSchema = z.object({
     cardName: z.string().min(2, "Valid name is required"),
     pointValue: z.number().optional(),
     cardBrand: z.enum([CardBrand.VISA, CardBrand.MASTER_CARD, CardBrand.AMERICAN_EXPRESS]),
+    cardBackgroundColor: z.string().optional(),
 });
 
 export default creditCardSchema;

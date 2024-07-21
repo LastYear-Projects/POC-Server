@@ -10,6 +10,7 @@ export interface ICreditCard extends Document {
     cardName: String;
     pointValue?: number;
     cardBrand: CardBrand;
+    cardBackgroundColor?: String; //TODO: add default color
 }
 
 const CreditCardSchema = new mongoose.Schema<ICreditCard>({
@@ -25,6 +26,9 @@ const CreditCardSchema = new mongoose.Schema<ICreditCard>({
     pointValue: {
         type: Number,
         default: 0
+    },
+    cardBackgroundColor: {
+        type: String,
     }
 })
 
