@@ -12,6 +12,7 @@ interface UserService extends BaseService {
   getUserByEmail: (email:string) => Promise<IUser & {_id: Types.ObjectId}>;
   loginUser: (email: string, password: string) => Promise<string>;
   updateUserPreferences: (userId: Types.ObjectId, userPreferences: userPreferences) => Promise<IUser & {_id: Types.ObjectId}>;
+  getPopulatedUserById: (userId: Types.ObjectId) => Promise<any>;
 }
 
 // Extend the base service with additional methods
@@ -21,14 +22,13 @@ const userService: UserService = {
   addCreditCard: async (userID: Types.ObjectId, cardID: Types.ObjectId) => {
     const user = await User.findById(userID);
     if (!user) throw new Error("User not found");
+    if(user.creditCards.includes(cardID)) throw new Error("Error in addCreditCard: the card is already exist")
     user.creditCards.push(cardID);
-
     await User.findOneAndUpdate({ _id: userID }, user);
   },
 
   getUserByEmail: async (email:string) => {
     return await User.findOne({email: email})
-
   },
 
   loginUser: async (email: string, password: string) => {
@@ -39,6 +39,10 @@ const userService: UserService = {
   updateUserPreferences: async (userId: Types.ObjectId, userPreferences: userPreferences) => {
     console.log("userPreferences",userPreferences)
     return await User.findOneAndUpdate( {_id: userId}, {userPreferences: userPreferences}, {new: true});
+  },
+
+  getPopulatedUserById:  async (userId: Types.ObjectId) => {
+    return await User.findById(userId).populate("creditCards")
   }
 };
 

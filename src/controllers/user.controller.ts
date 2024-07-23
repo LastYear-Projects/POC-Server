@@ -94,9 +94,14 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
+const getUserByToken = async (req: Request&{userId:Types.ObjectId}, res: Response) => {
+    return res.json(await userService.getPopulatedUserById(req.userId))
+}
+
 export default {
     getAllUsers,
     getUserById,
+    getUserByToken,
     addUser,
     deleteAllUsers,
     deleteUserById,
