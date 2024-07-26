@@ -8,7 +8,6 @@ import nodemailer from 'nodemailer';
 import User from '../models/User.Model';
 
 const authRouter = Router();
-const users = {}; // In-memory store for demo purposes
 const otps = {}; // Store OTPs with expiry times
 
 const generateOtp = () => {
@@ -30,19 +29,17 @@ authRouter
 
     // Setup nodemailer
     const transporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 465,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user: '0e34e59adbfcf2',
-        pass: '684126c0b6b09c',
+        user: 'advisorswipe@gmail.com',
+        pass: 'zump rapj tpxe tmhy',
       },
     });
 
     const mailOptions = {
-      from: 'SwipeAdvisor@gmail.com',
+      from: 'advisorswipe@gmail.com',
       to: email,
-      subject: 'Your OTP Code',
+      subject: 'SwipeAdvisor - Reset password',
       text: `Your OTP code is ${otp}`,
       html: `<h1>Your OTP code is ${otp}</h1>`,
     };
@@ -72,20 +69,14 @@ authRouter
   .post('/reset-password', async (req, res) => {
     const { email, newPassword } = req.body;
 
-    if (!users[email]) {
-      users[email] = {};
-    }
-
     const currentUser = await User.findOne({ email });
     if (!currentUser) {
       return res.status(404).send('User not found');
     }
     currentUser.password = newPassword;
-    console.log(currentUser);
 
     await currentUser.save();
 
-    users[email].password = newPassword; // In a real application, hash the password
     res.status(200).send('Password reset successful');
   });
 
