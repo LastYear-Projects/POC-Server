@@ -7,6 +7,7 @@ export interface BaseService {
   add: (item: Object) => Promise<Document>;
   deleteAll: () => Promise<any>;
   deleteById: (id: Types.ObjectId) => Promise<any>;
+  updateById: (id: Types.ObjectId, updatedModel: Object) => Promise<any>
 }
 
 
@@ -47,12 +48,21 @@ const genericService = <T extends BaseService>(Model: mongoose.Model<any>): T =>
     }
   };
 
+  const updateById: BaseService['updateById'] = async (id: Types.ObjectId, updatedModel: Object) => {
+    try{
+      return await Model.updateOne({_id: id}, updatedModel)
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
   const baseService: BaseService = {
     getAll,
     getById,
     add,
     deleteAll,
     deleteById,
+    updateById
   };
 
   return baseService as T;

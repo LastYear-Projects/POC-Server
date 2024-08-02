@@ -98,6 +98,11 @@ const getUserByToken = async (req: Request&{userId:Types.ObjectId}, res: Respons
     return res.json(await userService.getPopulatedUserById(req.userId))
 }
 
+const updateUserById = async (req: Request&{userId:Types.ObjectId}, res: Response) => {
+    await userService.updateById(req.userId, req.body)
+    return res.json()
+}
+
 export default {
     getAllUsers,
     getUserById,
@@ -106,7 +111,7 @@ export default {
     deleteAllUsers,
     deleteUserById,
     addCreditCard,
-   // updateUser,
+    updateUserById,
     updateUserPreferences,
     loginUser,
 };

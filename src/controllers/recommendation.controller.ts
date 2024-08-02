@@ -18,8 +18,8 @@ const getRecommendations = async (req: Request & {userId: Types.ObjectId}, res: 
         if(!user) return res.status(400).json({error: "user not found"})
         const userCards=user.creditCards;
         const benefits: IBenefit[]= await benefitService.getAll({creditCardId:{$in:userCards},$or:[{businessId:businessId},{businessId:undefined}]})
-        
-        const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || benefit.minPurchaseAmount<Number(transactionAmount));
+
+        const filteredBenefits = benefits.filter(benefit=> benefit.minPurchaseAmount== undefined || Number(transactionAmount)>=benefit.minPurchaseAmount);
         if(user.userPreferences.cardsPreference.length == 0) user.userPreferences.cardsPreference=userCards;
         const recommendations: EvaluatedCreditCard[] = await recommendationService.getRecommendations(filteredBenefits,user.userPreferences, Number(transactionAmount));
         const sortedRecommendations = [...recommendations].sort((rec1, rec2) => rec2.grade-rec1.grade);
