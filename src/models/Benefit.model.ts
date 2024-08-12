@@ -1,22 +1,26 @@
 import mongoose from "mongoose";
-enum DiscountType {
+import { Document, Types } from "mongoose";
+import { ICreditCard } from "./CreditCard.model";
+export enum DiscountType {
     POINTS = "points",
     CASHBACK = "cashback", //User cannot choose cashback as an option, Its an added bonus to
     //the respective credit card.
     DISCOUNT = "discount",
 }
 
-enum ValueType {
+export enum ValueType {
     PERCENTAGE = "percentage",
     NUMBER = "number",
 }
 
-export interface IBenefit {
-    businessId?: mongoose.Schema.Types.ObjectId;
-    creditCardId: mongoose.Schema.Types.ObjectId;
+export interface IBenefit extends Document {
+    businessId?: Types.ObjectId;
+    creditCardId: Types.ObjectId;
     discountType: DiscountType;
     valueType:ValueType ;
     value: number;
+    maxProfit?: number; //for a percentage benefit - describe the maximum profit a user can achieve. (may exists only in percentage)
+    minPurchaseAmount?: number; // for a number benefit - describe the minimum purchase amount should be to activate the benefit. (exists only in number benefits)
 }
 
 const BenefitSchema = new mongoose.Schema<IBenefit>({
@@ -44,6 +48,12 @@ const BenefitSchema = new mongoose.Schema<IBenefit>({
     value: {
         type: Number,
         min: 1
+    },
+    maxProfit: {
+        type: Number,
+    },
+    minPurchaseAmount: {
+        type: Number
     }
     
 })

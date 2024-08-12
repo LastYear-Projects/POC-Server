@@ -1,9 +1,12 @@
 import CreditCard from "../models/CreditCard.model";
-import genericService from "./generic.service";
+import genericService, { BaseService } from "./generic.service";
 
-const creditCardService = genericService(CreditCard)
+interface CreditCardService extends BaseService {
 
+}
+const creditCardService: CreditCardService = {
+    ...genericService<CreditCardService>(CreditCard),
 
+}
 
-
-export default creditCardService
+export default creditCardService;

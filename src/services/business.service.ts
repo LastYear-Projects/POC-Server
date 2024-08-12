@@ -1,10 +1,14 @@
 import Business from "../models/Business.model";
 
-import genericService from "./generic.service";
+import genericService, { BaseService } from "./generic.service";
 
-const businessService = genericService(Business)
+interface BusinessService extends BaseService {
 
-
+}
+const businessService: BusinessService = {
+    ...genericService<BusinessService>(Business),
+    
+}
 
 
 
