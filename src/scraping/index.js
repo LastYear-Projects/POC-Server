@@ -129,8 +129,9 @@ async function scrapeWebsiteIsracrd(url) {
   }
 }
 
-async function scrapeWebsiteHever(url) {
+export async function scrapeWebSiteHever() {
   const cashBacks= [];
+  const url= 'https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202';
   const creditCardId = '66bb7766995330bf77f4ccb2';
   try {
     const { data } = await axios.get(url);
@@ -164,7 +165,7 @@ async function scrapeWebsiteHever(url) {
   }
 
 }
-
+module.exports ={scrapeWebSiteHever};
 
 // const pipeToSwipeAdvisor = (data, creditCardId) => {
 //   return data.map((benefit) => {
@@ -187,7 +188,7 @@ async function scrapeWebsiteHever(url) {
 
 
 // scrapeWebsiteIsracrd('https://benefits.isracard.co.il/parentcategories/online-benefits/');
-const cashBackHever = scrapeWebsiteHever('https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202');
+// const cashBackHever = scrapeWebSiteHever();
 
 
 

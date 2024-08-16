@@ -1,8 +1,9 @@
 import { Router } from "express";
+import addBenefit from "../controllers/scraping.contoller"
 
 
 const scrapingRouter = Router();
 
-scrapingRouter.get("/",createBenefitFromHever)
+scrapingRouter.get("/",addBenefit.addBenefitsFromScraping)
 
-export default authRouter;
+export default scrapingRouter;

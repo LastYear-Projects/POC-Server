@@ -3,7 +3,6 @@ import {DiscountType, ValueType} from "../models/Benefit.model";
 import {util} from "zod";
 import find = util.find;
 import businessService from "./business.service";
-import {IBusiness} from "../models/Business.model";
 import benefitService from "./benefit.service";
 
 export interface IcashBack  {
@@ -14,7 +13,7 @@ export interface IcashBack  {
     value: number
     businessImage: string
 }
-const createBenefitFromHever = async (cashBackArr: IcashBack[]) => {
+ const createBenefitFromURL = async (cashBackArr: IcashBack[]) => {
     try {
         for (let i = 0; i < cashBackArr.length; i++) {
             const {businessName, creditCardId, discountType, valueType, value, businessImage} = cashBackArr[i]
@@ -38,7 +37,5 @@ const createBenefitFromHever = async (cashBackArr: IcashBack[]) => {
         console.log("error in createBenefitFromHever " + error.message);
     }
 
-
-
-
 }
+export default createBenefitFromURL;

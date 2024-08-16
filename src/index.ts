@@ -12,6 +12,7 @@ import authRouter from "./routes/auth.routes"
 import recommendationRouter from "./routes/recommendation.routes";
 
 import {BLUE, RESET_COLOR} from './constants/index'
+import scrapingRouter from "./routes/scrape.routes";
 dotenv.config();
 
 
@@ -27,6 +28,7 @@ app.use("/benefits", benefitRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter)
 app.use("/recommendation", recommendationRouter)
+app.use("/scrape",scrapingRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
