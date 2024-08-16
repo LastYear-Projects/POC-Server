@@ -128,13 +128,41 @@ async function scrapeWebsiteIsracrd(url) {
     }
   }
 }
+// async function loginToWebsite(loginUrl) {
+//   const credentials = {
+//     username: '311238356', // Replace with your username
+//     password: '311238356', // Replace with your password
+//   };
+//
+//   try {
+//     const response = await axios.post(loginUrl, credentials, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//
+//     const cookies = response.headers['set-cookie'];
+//     return cookies;
+//
+//   } catch (error) {
+//     console.error('Login failed:', error);
+//     throw error;
+//   }
+// }
 
 export async function scrapeWebSiteHever() {
   const cashBacks= [];
   const url= 'https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202';
+  // const cookies= await loginToWebsite(url);
+
   const creditCardId = '66bb7766995330bf77f4ccb2';
   try {
     const { data } = await axios.get(url);
+    // const { data } = await axios.get(url, {
+    //   headers: {
+    //     'Cookie': cookies.join('; '), // Pass the session cookies in the request
+    //   },
+    // });
     const $ = cheerio.load(data);
     const baseUrl = new URL(url).origin;
 
