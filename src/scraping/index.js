@@ -130,6 +130,7 @@ async function scrapeWebsiteIsracrd(url) {
 }
 
 async function scrapeWebsiteHever(url) {
+  const cashBacks= [];
   const creditCardId = '66bb7766995330bf77f4ccb2';
   try {
     const { data } = await axios.get(url);
@@ -142,8 +143,8 @@ async function scrapeWebsiteHever(url) {
       const imageUrl = $(element).find('.preview_logo').attr('data-src');
       const backgroundImage = resolveUrl(baseUrl, imageUrl);
 
-      if (containsCashbackKeywords(title) || containsCashbackKeywords(subTitle)) {
-        cashbackItems.push({
+      if (containsCashbackKeywords(title) && containsCashbackKeywords(subTitle)) {
+        cashBacks.push({
           businessName: reOrderBidiText(title),
           businessSubTitle: reOrderBidiText(subTitle),
           creditCardId: creditCardId,
@@ -155,14 +156,12 @@ async function scrapeWebsiteHever(url) {
       }
     });
 
-    console.log(cashbackItems);
+    console.log(cashBacks);
+    return cashBacks;
 
   } catch (error) {
     console.error(`Error scraping the website ${url}:`, error);
   }
-
-
-
 
 }
 
@@ -188,7 +187,7 @@ async function scrapeWebsiteHever(url) {
 
 
 // scrapeWebsiteIsracrd('https://benefits.isracard.co.il/parentcategories/online-benefits/');
-scrapeWebsiteHever('https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202');
+const cashBackHever = scrapeWebsiteHever('https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202');
 
 
 
