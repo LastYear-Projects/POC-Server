@@ -1,7 +1,5 @@
-import mongoose, {Types} from "mongoose";
+import {Types} from "mongoose";
 import {DiscountType, ValueType} from "../models/Benefit.model";
-import {util} from "zod";
-import find = util.find;
 import businessService from "./business.service";
 import benefitService from "./benefit.service";
 
@@ -21,7 +19,7 @@ export interface IcashBack  {
             const {businessName, creditCardId, discountType, valueType, value, businessImage} = cashBackArr[i]
             const business=await businessService.getByName(businessName);
             if (!business) {
-                businessService.add({name: businessName,businessImage: businessImage})
+                await businessService.add({name: businessName, businessImage: businessImage})
             }
 
             const benefit = {
