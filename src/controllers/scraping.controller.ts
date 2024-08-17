@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import {scrapeWebSiteHever} from "../scraping/scrapeHever.js";
+import {scrapeWebSiteHever} from "../scraping/index.js";
 import createBenefitFromURL from "../services/addBenefitsFromHever";
 
  const addBenefitsFromScraping = async (req: Request, res: Response) => {

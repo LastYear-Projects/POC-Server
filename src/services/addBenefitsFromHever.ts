@@ -14,12 +14,11 @@ export interface IcashBack  {
  const createBenefitFromURL = async (cashBackArr: IcashBack[]) => {
     try {
         //TODO change to cashBackArr.length after testing
-        // for (let i = 0; i < cashBackArr.length; i++) {
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < cashBackArr.length; i++) {
             const {businessName, creditCardId, discountType, valueType, value, businessImage} = cashBackArr[i]
-            const business=await businessService.getByName(businessName);
+            let business=await businessService.getByName(businessName);
             if (!business) {
-                await businessService.add({name: businessName, businessImage: businessImage})
+                business=await businessService.add({businessName,businessImage})
             }
 
             const benefit = {

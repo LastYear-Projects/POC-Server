@@ -1,5 +1,5 @@
-import axios from 'axios';
-import cheerio from 'cheerio';
+const axios =require('axios');
+const cheerio =require('cheerio');
 
 // Function to check if the text contains cashback-related keywords
 let cashbackItems = [];
@@ -58,76 +58,76 @@ function getFirstWord(text) {
 }
 
 // Function to scrape data
-async function scrapeWebsiteIsracrd(url) {
-  try {
-    // Step 1: Make a request to the website
-    const { data } = await axios.get(url);
-
-    // Step 2: Load the HTML into cheerio
-    const $ = cheerio.load(data);
-    const baseUrl = new URL(url).origin;
-
-
-
-    $('.category-item').each((index, element) => {
-      const title = $(element).find('.caption-title').text().trim();
-      const subTitle = $(element).find('.caption-sub-title').text().trim();
-      const firstWordOfSubTitle = getFirstWord(subTitle);
-      const backgroundImage = $(element)
-          .find('.category-featured-benefit')
-          .css('background-image');
-
-      // Only include items with cashback-related keywords
-      if (
-          containsCashbackKeywords(title) ||
-          containsCashbackKeywords(firstWordOfSubTitle)
-      ) {
-        cashbackItems.push({
-          title: reOrderBidiText(title),
-          subTitle: firstWordOfSubTitle,
-          backgroundImage,
-        });
-      }
-    });
-
-    if (cashbackItems.length === 0) {
-      console.warn('No cashback items found.');
-    }
-
-    // Step 4: Fetch details for each cashback item
-    for (const item of cashbackItems) {
-      if (item.detailUrl) {
-        try {
-          const detailData = await axios.get(item.detailUrl);
-          const $detail = cheerio.load(detailData.data);
-
-          const cashbackTitle = $detail('.cashBack-title').text().trim();
-          const cashbackDescription = $detail('.cashBack-description').text().trim();
-          const dedicatedCoupon = $detail('.dedicate-coupon-block-store-coupon').text().trim();
-
-          item.cashbackDetails = {
-            title: reOrderBidiText(cashbackTitle),
-            description: reOrderBidiText(cashbackDescription),
-            dedicatedCoupon: reOrderBidiText(dedicatedCoupon),
-          };
-        } catch (detailError) {
-          console.error(`Error fetching details for item ${item.title}:`, detailError);
-        }
-      }
-    }
-
-    // Step 5: Print the extracted data
-    pipeToSwipeAdvisor(cashbackItems,'6658b688892bce96bd5d588f');
-  } catch (error) {
-    console.error(`Error scraping the website ${url}:`, error);
-    if (retries > 0) {
-      console.warn(`Retrying ${url} (${retries} retries left)...`);
-      await scrapeWebsiteIsracrd(url, retries - 1);
-    } else {
-      console.error(`Error scraping the website ${url}:`, error);
-    }
-  }
-}
+// async function scrapeWebsiteIsracrd(url) {
+//   try {
+//     // Step 1: Make a request to the website
+//     const { data } = await axios.get(url);
+//
+//     // Step 2: Load the HTML into cheerio
+//     const $ = cheerio.load(data);
+//     const baseUrl = new URL(url).origin;
+//
+//
+//
+//     $('.category-item').each((index, element) => {
+//       const title = $(element).find('.caption-title').text().trim();
+//       const subTitle = $(element).find('.caption-sub-title').text().trim();
+//       const firstWordOfSubTitle = getFirstWord(subTitle);
+//       const backgroundImage = $(element)
+//           .find('.category-featured-benefit')
+//           .css('background-image');
+//
+//       // Only include items with cashback-related keywords
+//       if (
+//           containsCashbackKeywords(title) ||
+//           containsCashbackKeywords(firstWordOfSubTitle)
+//       ) {
+//         cashbackItems.push({
+//           title: reOrderBidiText(title),
+//           subTitle: firstWordOfSubTitle,
+//           backgroundImage,
+//         });
+//       }
+//     });
+//
+//     if (cashbackItems.length === 0) {
+//       console.warn('No cashback items found.');
+//     }
+//
+//     // Step 4: Fetch details for each cashback item
+//     for (const item of cashbackItems) {
+//       if (item.detailUrl) {
+//         try {
+//           const detailData = await axios.get(item.detailUrl);
+//           const $detail = cheerio.load(detailData.data);
+//
+//           const cashbackTitle = $detail('.cashBack-title').text().trim();
+//           const cashbackDescription = $detail('.cashBack-description').text().trim();
+//           const dedicatedCoupon = $detail('.dedicate-coupon-block-store-coupon').text().trim();
+//
+//           item.cashbackDetails = {
+//             title: reOrderBidiText(cashbackTitle),
+//             description: reOrderBidiText(cashbackDescription),
+//             dedicatedCoupon: reOrderBidiText(dedicatedCoupon),
+//           };
+//         } catch (detailError) {
+//           console.error(`Error fetching details for item ${item.title}:`, detailError);
+//         }
+//       }
+//     }
+//
+//     // Step 5: Print the extracted data
+//     pipeToSwipeAdvisor(cashbackItems,'6658b688892bce96bd5d588f');
+//   } catch (error) {
+//     console.error(`Error scraping the website ${url}:`, error);
+//     if (retries > 0) {
+//       console.warn(`Retrying ${url} (${retries} retries left)...`);
+//       await scrapeWebsiteIsracrd(url, retries - 1);
+//     } else {
+//       console.error(`Error scraping the website ${url}:`, error);
+//     }
+//   }
+// }
 // async function loginToWebsite(loginUrl) {
 //   const credentials = {
 //     username: '311238356', // Replace with your username
@@ -172,7 +172,7 @@ export async function scrapeWebSiteHever() {
       const imageUrl = $(element).find('.preview_logo').attr('data-src');
       const backgroundImage = resolveUrl(baseUrl, imageUrl);
 
-      if (containsCashbackKeywords(title) && containsCashbackKeywords(subTitle)) {
+      if (containsCashbackKeywords(subTitle)) {
         cashBacks.push({
           businessName: reOrderBidiText(title),
           businessSubTitle: reOrderBidiText(subTitle),
@@ -184,8 +184,7 @@ export async function scrapeWebSiteHever() {
         });
       }
     });
-
-    console.log(cashBacks);
+    console.log(cashBacks[0]);
     return cashBacks;
 
   } catch (error) {
