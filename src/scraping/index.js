@@ -150,7 +150,7 @@ function getFirstWord(text) {
 //   }
 // }
 
-export async function scrapeWebSiteHever() {
+ async function scrapeWebSiteHever() {
   const cashBacks= [];
   const url= 'https://www.cashback-hvr.co.il/category/travel?mid=269341&sig=f8d7e3d24bccb99dfcafb5ddd354c202';
   // const cookies= await loginToWebsite(url);
