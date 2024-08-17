@@ -1,5 +1,5 @@
 import { Router } from "express";
-import addBenefit from "../controllers/scraping.contoller"
+import addBenefit from "../controllers/scraping.controller"
 
 
 const scrapingRouter = Router();
