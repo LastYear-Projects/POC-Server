@@ -57,6 +57,23 @@ function getFirstWord(text) {
   return text.split(delimiterPattern)[0].trim();
 }
 
+function titleHebEngFix(text) {
+    const hebrewRegex = /[\u0590-\u05FF]/g;
+    const englishRegex = /[a-zA-Z]/;
+    text = text.replace(/-/g, ' ');
+    // text = text.replace(/\s+/g, '')
+
+    if (hebrewRegex.test(text) && englishRegex.test(text)) {
+        // Remove all Hebrew letters and return only English letters
+        return text.replace(hebrewRegex, '');
+    } else if (hebrewRegex.test(text)) {
+        // Return only Hebrew letters
+        const newWord1 = text.replace(englishRegex, '');
+        return reOrderBidiText(newWord1);
+    }
+    return text;
+}
+
 // Function to scrape data
 // async function scrapeWebsiteIsracrd(url) {
 //   try {
@@ -174,7 +191,7 @@ function getFirstWord(text) {
 
       if (containsCashbackKeywords(subTitle)) {
         cashBacks.push({
-          businessName: reOrderBidiText(title),
+          businessName: titleHebEngFix(title),
           businessSubTitle: reOrderBidiText(subTitle),
           creditCardId: creditCardId,
           discountType: 'cashback',
